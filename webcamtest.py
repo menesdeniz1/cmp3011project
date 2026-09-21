@@ -1,8 +1,13 @@
 import cv2
 from ultralytics import YOLO
+import os
+from pathlib import Path
 
 # Load the trained model
-model = YOLO("runs/detect/train10/best.pt")  # Update the path if necessary
+model_path = os.environ.get("MASK_MODEL_PATH", "")
+if not model_path or not Path(model_path).is_file():
+    raise RuntimeError("Set MASK_MODEL_PATH to a trusted local YOLO checkpoint before opening the camera.")
+model = YOLO(model_path)
 
 # Initialize the webcam
 cap = cv2.VideoCapture(0)  # 0 is the default webcam; use another number if you have multiple cameras
